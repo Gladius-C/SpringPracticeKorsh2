@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1 th:text="'Звезда'+${one_star.name}"></h1>
+<div>
+  <h2 th:text="'Класс звезды'+${one_star.getClassStar()}"></h2>
+  <p th:text="'Масса звезды'+${one_star.getMassStar()}"></p>
+    <div>
+        <a th:href="'star/detail/'+${one_star.UID}+'/upd'"
+        class="btn btn-warning">Редактировать</a>
+        <form th:action="'star/detail/'+${one_star.UID}+'/del'"></form>
+        <a th:href="'star/detail/'+${one_star.UID}+'/del'"
+           class="btn btn-danger">Удалить</a>
+    </div>
+</div>
+<a class="btn btn-primary" href="/star1/" class="btn btn-success">назад</a>
+</body>
+</html>
