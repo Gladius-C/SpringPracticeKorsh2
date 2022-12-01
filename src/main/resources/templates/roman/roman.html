@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <style>
+        .hidden{display: none}
+        .visible{display: inline}
         body {
             background: magenta url("/dragon.png");
         }
@@ -39,6 +41,16 @@
 </head>
 <body>
 <h1>Римляне!</h1>
+<div class="container">
+    <form method="get" action="/list1/filter">
+        <input class="form-control" name="name" type="text" maxlength="50">
+        <input class="btn btn-info" type="submit" value="Найти по полному соответствию">
+    </form>
+    <form method="get" action="/list1/filterContains/">
+        <input class="form-control" name="name" type="text" maxlength="50">
+        <input class="btn btn-info" type="submit" value="Найти по частичному соответствию">
+    </form>
+</div>
 <table th:each="el:${roman_list}">
     <tr>
         <th>Имя</th>
@@ -53,16 +65,41 @@
         <td th:text="${el.majorDeeds}"></td>
         <td th:text="${el.netWorth}"></td>
         <td th:text="${el.ethnicity}"></td>
+        <td>
+            <a th:href="'/del1/'+${el.UID}">Удалить запись</a>
+        </td>
+        <td>
+            <a th:href="'/details1/'+${el.UID}">просмотреть запись</a>
+        </td>
     </tr>
 </table>
-<form action="add1" method="post" th:object="${new_roman}">
-    <input class="form-control" type="text" name="name" defaultvalue="Введите имя" maxlength="50">
-    <input  class="form-control" type="date" name="dateOfBirth" value="Введите дату рождения" maxlength="50">
-    <input  class="form-control" type="text" name="majorDeeds" value="Введите сведения">
-    <input  class="form-control" type="number" name="netWorth" value="Введите сумму" min="0">
-    <input  class="form-control" type="text" name="ethnicity" value="Введите этнос">
+
+<a th:href="'/permitGain1'">Перейти в режим редактирования</a>
+
+<form action="/add1" method="post" th:object="${new_roman}">>
+    <input class="form-control" type="text" name="name" placeholder="Введите имя" maxlength="50">
+    <input  class="form-control" type="date" name="dateOfBirth" placeholder="Введите дату рождения" maxlength="50">
+    <input  class="form-control" type="text" name="majorDeeds" placeholder="Введите сведения">
+    <input  class="form-control" type="number" name="netWorth" placeholder="Введите сумму" min="0" max="99999999">
+    <input  class="form-control" type="text" name="ethnicity" placeholder="Введите этнос">
 
     <button type="submit">Добавить персону</button>
 </form>
+
+<div th:class="${isHidden}">
+<form action="/upd1" method="post" >
+    <select name="id_roman">
+        <option th:each="el:${roman_list}" th:value="${el.UID}" th:text="${el.name}"></option>
+    </select>
+    <input class="form-control" type="text" name="name" placeholder="Введите имя" maxlength="50">
+    <input  class="form-control" type="date" name="dateOfBirth" placeholder="Введите дату рождения" maxlength="50">
+    <input  class="form-control" type="text" name="majorDeeds" placeholder="Введите сведения">
+    <input  class="form-control" type="number" name="netWorth" placeholder="Введите сумму" min="0" max="99999999">
+    <input  class="form-control" type="text" name="ethnicity" placeholder="Введите этнос">
+
+    <button type="submit">Обновить персону</button>
+    <a th:href="'/permitDeny1'">Выйти из режима редактирования</a>
+</form>
+</div>
 </body>
 </html>

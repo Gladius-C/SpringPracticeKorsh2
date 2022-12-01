@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <title>Title</title>
   <style>
+    .hidden{display: none}
+    .visible{display: inline}
     body {
       background: magenta url("/dragon.png");
     }
@@ -38,26 +40,16 @@
 
 </head>
 <body>
-<h1>Сражения!</h1>
-<table th:each="el:${battle_list}">
-  <tr>
-    <th>Локация</th>
-    <th>Дата</th>
-    <th>Атакующий</th>
-    <th>Защитник</th>
-    <th>Потери</th>
-    <th>Победитель</th>
-  </tr>
-  <tr>
-    <td th:text="${el.location}"></td>
-    <td th:text="${el.date}"></td>
-    <td th:text="${el.attacker}"></td>
-    <td th:text="${el.defender}"></td>
-    <td th:text="${el.casualties}"></td>
-    <td th:text="${el.winner}"></td>
-  </tr>
-</table>
-<form action="/add2" method="post" th:object="${new_battle}">
+<h1 th:text="${battle.getLocation()}" ></h1>
+<div>
+  <p th:text="'Дата: '+${battle.getDate()}"></p>
+  <p th:text="'Защитник: '+${battle.getDefender()}"></p>
+  <p th:text="'Атакующий: '+${battle.getAttacker()}"></p>
+  <p th:text="'Потери: '+${battle.getCasualties()}"></p>
+  <p th:text="'Победитель: '+${battle.getWinner()}"></p>
+</div>
+<form action="/updDet2" method="post" >
+  <input class="hidden" type="number" name="id_battle" th:value="${battle.getUID()}">
   <input class="form-control" type="text" name="location" required placeholder="Введите локацию" maxlength="50">
   <input  class="form-control" type="date" name="date" required placeholder="Введите дату" maxlength="50">
   <input  class="form-control" type="text" name="attacker" required placeholder="Введите атакующую сторону" maxlength="50">
@@ -65,8 +57,8 @@
   <input  class="form-control" type="text" name="casualties" min="0" required placeholder="Введите число потерь" maxlength="50">
   <input  class="form-control" type="text" name="winner" required placeholder="Введите победившую сторону" maxlength="50">
 
-  <button type="submit">Добавить битву</button>
+  <button type="submit">Обновить битву</button>
 </form>
-<a href="/list2" class="btn btn-success">переход</a>
+<a href="/list2">Вернуться к списку</a>
 </body>
 </html>

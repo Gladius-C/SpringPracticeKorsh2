@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <title>Title</title>
   <style>
+    .hidden{display: none}
+    .visible{display: inline}
     body {
       background: magenta url("/dragon.png");
     }
@@ -38,8 +40,18 @@
 
 </head>
 <body>
-<h1>Сражения!</h1>
-<table th:each="el:${battle_list}">
+<h1>Битвы!</h1>
+<div class="container">
+  <form method="get" action="/list2/filter">
+    <input class="form-control" name="defender" type="text" maxlength="50">
+    <input class="btn btn-info" type="submit" value="Найти по полному соответствию одной из сторон">
+  </form>
+  <form method="get" action="/list2/filterContains/">
+    <input class="form-control" name="defender" type="text" maxlength="50">
+    <input class="btn btn-info" type="submit" value="Найти по частичному соответствию одной из сторон">
+  </form>
+</div>
+<table  th:each="el:${battle_list}">
   <tr>
     <th>Локация</th>
     <th>Дата</th>
@@ -55,18 +67,43 @@
     <td th:text="${el.defender}"></td>
     <td th:text="${el.casualties}"></td>
     <td th:text="${el.winner}"></td>
+    <td>
+     <a th:href="'/del2/'+${el.UID}">Удалить запись</a>
+    </td>
+    <td>
+      <a th:href="'/details2/'+${el.UID}">просмотреть запись</a>
+    </td>
   </tr>
 </table>
-<form action="/add2" method="post" th:object="${new_battle}">
+
+<a th:href="'/permitGain2'">Перейти в режим редактирования</a>
+
+<form action="/add2" method="post" th:object="${new_battle}">>
   <input class="form-control" type="text" name="location" required placeholder="Введите локацию" maxlength="50">
   <input  class="form-control" type="date" name="date" required placeholder="Введите дату" maxlength="50">
   <input  class="form-control" type="text" name="attacker" required placeholder="Введите атакующую сторону" maxlength="50">
-  <input  class="form-control" type="number" name="defender" required placeholder="Введите защищающуюся сторону" maxlength="50">
-  <input  class="form-control" type="text" name="casualties" min="0" required placeholder="Введите число потерь" maxlength="50">
+  <input  class="form-control" type="text" name="defender" required placeholder="Введите защищающуюся сторону" maxlength="50">
+  <input  class="form-control" type="number" name="casualties" min="0" required placeholder="Введите число потерь" maxlength="50">
   <input  class="form-control" type="text" name="winner" required placeholder="Введите победившую сторону" maxlength="50">
 
   <button type="submit">Добавить битву</button>
 </form>
-<a href="/list2" class="btn btn-success">переход</a>
+
+<div th:class="${isHidden}">
+  <form action="/upd2" method="post" >
+    <select name="id_battle">
+      <option th:each="el:${battle_list}" th:value="${el.UID}" th:text="${el.location}"></option>
+    </select>
+    <input class="form-control" type="text" name="location" required placeholder="Введите локацию" maxlength="50">
+    <input  class="form-control" type="date" name="date" required placeholder="Введите дату" maxlength="50">
+    <input  class="form-control" type="text" name="attacker" required placeholder="Введите атакующую сторону" maxlength="50">
+    <input  class="form-control" type="number" name="defender" required placeholder="Введите защищающуюся сторону" maxlength="50">
+    <input  class="form-control" type="text" name="casualties" min="0" required placeholder="Введите число потерь" maxlength="50">
+    <input  class="form-control" type="text" name="winner" required placeholder="Введите победившую сторону" maxlength="50">
+
+    <button type="submit">Обновить битву</button>
+    <a th:href="'/permitDeny2'">Выйти из режима редактирования</a>
+  </form>
+</div>
 </body>
 </html>

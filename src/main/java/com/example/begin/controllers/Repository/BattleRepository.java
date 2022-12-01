@@ -6,8 +6,8 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface BattleRepository extends CrudRepository<Battle, Long> {
-    public List findByDefenderAndAttackerContains(String defender, String attacker);
-    public List findByDefenderAndAttacker(String defender, String attacker);
+    public List findByDefenderOrAttackerContains(String defender, String attacker);
+    public List findByDefenderOrAttacker(String defender, String attacker);
     public List findByWinner(String winner);
     public List findByWinnerContains(String winner);
 }
