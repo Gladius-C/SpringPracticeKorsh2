@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.*;
 import javax.xml.crypto.Data;
 import java.util.Date;
 
@@ -14,16 +15,25 @@ public class Battle {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long UID;
 
+    @NotBlank(message = "Строка не должна быть пустой")
+    @Size(min=3, max=30, message = "Строка должна быть не больше 30 символов и не меньше 3")
     private String location;
 
+    @NotBlank(message = "Строка не должна быть пустой")
     private Date date;
 
+    @NotBlank(message = "Строка не должна быть пустой")
     private String defender;
 
+    @NotBlank(message = "Строка не должна быть пустой")
     private String attacker;
 
+    @Min(value = 0, message = "Значение не может быть меньше нуля")
+    @Max(value = 9999999, message = "Введено слишком большое значение")
+    @NotNull(message = "Строка не должна быть пустой")
     private Integer casualties;
 
+    @NotBlank(message = "Строка не должна быть пустой")
     private String winner;
 
     public Battle(){

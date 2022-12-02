@@ -13,23 +13,25 @@ public class Roman {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long UID;
 
-   // @Size(min=2, max=50, message = "Неверное значение")
-    //@NotBlank(message = "Строка не должна быть пустой")
+    @NotBlank(message = "Строка не должна быть пустой")
+    @Size(min=3, max=30, message = "Строка должна быть не больше 30 символов и не меньше 3")
     private String name;
 
     //@NotEmpty(message = "Строка не должна быть пустой")
+    @NotNull(message = "Строка не должна быть пустой")
     private Date dateOfBirth;
 
-   // @Min(1)
-    //@Max(9999999)
+    @PositiveOrZero(message = "Значение не может быть меньше нуля")
+    @Max(value = 9999999, message = "Введено слишком большое значение")
+    @NotNull(message = "Строка не должна быть пустой")
     private Integer netWorth;
 
-   // @Size(min=5, max=100)
-   // @NotBlank(message = "Строка не должна быть пустой")
+    @Size(min=5, max=100)
+    @NotBlank(message = "Строка не должна быть пустой")
     private String majorDeeds;
 
-  //  @Size(min=5, max=100)
-   // @NotBlank(message = "Строка не должна быть пустой")
+    @Size(min=5, max=100)
+    @NotBlank(message = "Строка не должна быть пустой")
     private String ethnicity;
 
     public Roman(){

@@ -76,26 +76,34 @@
 
 <a th:href="'/permitGain1'">Перейти в режим редактирования</a>
 
-<form action="/add1" method="post" th:object="${new_roman}">>
-    <input class="form-control" type="text" name="name" placeholder="Введите имя" maxlength="50">
-    <input  class="form-control" type="date" name="dateOfBirth" placeholder="Введите дату рождения" maxlength="50">
-    <input  class="form-control" type="text" name="majorDeeds" placeholder="Введите сведения">
-    <input  class="form-control" type="number" name="netWorth" placeholder="Введите сумму" min="0" max="99999999">
-    <input  class="form-control" type="text" name="ethnicity" placeholder="Введите этнос">
+<form th:action="${'/add1'}" method="post" th:object="${roman}">
+    <input th:field="*{name}" class="form-control" type="text" name="name" placeholder="Введите имя" maxlength="50">
+    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: magenta"></div>
+    <input th:field="*{dateOfBirth}" class="form-control" type="date" name="dateOfBirth" placeholder="Введите дату рождения" maxlength="50" required>
+    <input th:field="*{majorDeeds}" class="form-control" type="text" name="majorDeeds" placeholder="Введите сведения">
+    <div th:if="${#fields.hasErrors('majorDeeds')}" th:errors="*{majorDeeds}" style="color: magenta"></div>
+    <input th:field="*{netWorth}" class="form-control" type="number" name="netWorth" placeholder="Введите сумму" min="0" max="99999999">
+    <div th:if="${#fields.hasErrors('netWorth')}" th:errors="*{netWorth}" style="color: magenta"></div>
+    <input th:field="*{ethnicity}" class="form-control" type="text" name="ethnicity" placeholder="Введите этнос">
+    <div th:if="${#fields.hasErrors('ethnicity')}" th:errors="*{ethnicity}" style="color: magenta"></div>
 
     <button type="submit">Добавить персону</button>
 </form>
 
 <div th:class="${isHidden}">
-<form action="/upd1" method="post" >
+<form th:action="${'/upd1'}" method="post" th:object="${roman}">
     <select name="id_roman">
         <option th:each="el:${roman_list}" th:value="${el.UID}" th:text="${el.name}"></option>
     </select>
-    <input class="form-control" type="text" name="name" placeholder="Введите имя" maxlength="50">
-    <input  class="form-control" type="date" name="dateOfBirth" placeholder="Введите дату рождения" maxlength="50">
-    <input  class="form-control" type="text" name="majorDeeds" placeholder="Введите сведения">
-    <input  class="form-control" type="number" name="netWorth" placeholder="Введите сумму" min="0" max="99999999">
-    <input  class="form-control" type="text" name="ethnicity" placeholder="Введите этнос">
+    <input th:field="*{name}" class="form-control" type="text" name="name" placeholder="Введите имя" maxlength="50">
+    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: magenta"></div>
+    <input th:field="*{dateOfBirth}" class="form-control" type="date" name="dateOfBirth" placeholder="Введите дату рождения" maxlength="50" required>
+    <input th:field="*{majorDeeds}" class="form-control" type="text" name="majorDeeds" placeholder="Введите сведения">
+    <div th:if="${#fields.hasErrors('majorDeeds')}" th:errors="*{majorDeeds}" style="color: magenta"></div>
+    <input th:field="*{netWorth}" class="form-control" type="number" name="netWorth" placeholder="Введите сумму" min="0" max="99999999">
+    <div th:if="${#fields.hasErrors('netWorth')}" th:errors="*{netWorth}" style="color: magenta"></div>
+    <input th:field="*{ethnicity}" class="form-control" type="text" name="ethnicity" placeholder="Введите этнос">
+    <div th:if="${#fields.hasErrors('ethnicity')}" th:errors="*{ethnicity}" style="color: magenta"></div>
 
     <button type="submit">Обновить персону</button>
     <a th:href="'/permitDeny1'">Выйти из режима редактирования</a>

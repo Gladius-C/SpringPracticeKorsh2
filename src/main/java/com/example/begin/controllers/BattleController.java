@@ -21,19 +21,21 @@ public class BattleController {
     BattleRepository battleRepository;
 
     @GetMapping("/list2ini")
-    public String InitBattle(Model model)
+    public String InitBattle(Model model, Battle battle)
     {
         Iterable<Battle> battleIterable = battleRepository.findAll();
         model.addAttribute("battle_list",battleIterable);
+        model.addAttribute("battle", battle);
         //String typeInput = "hidden";
         //model.addAttribute("isHidden", typeInput);
         return "battle/battleBlank";
     }
     @GetMapping("list2/")
-    public String ListBattle(Model model){
+    public String ListBattle(Model model,Battle battle){
         Iterable<Battle> battleIterable = battleRepository.findAll();
         model.addAttribute("battle_list",battleIterable);
         String typeInput = "hidden";
+        model.addAttribute("battle", battle);
         model.addAttribute("isHidden", typeInput);
         return "battle/battleBlank";
     }
@@ -41,50 +43,57 @@ public class BattleController {
     @GetMapping("/list2/filter")
     public String ListFilterBattle(@RequestParam(name = "defender")String defender,
                                    //@RequestParam(name = "attacker")String attacker,
-                                   Model model) {
+                                   Model model, Battle battle) {
         Iterable<Battle> battleIterable = battleRepository.findByDefenderOrAttacker(defender, defender);
         model.addAttribute("battle_list", battleIterable);
         String typeInput = "hidden";
         model.addAttribute("isHidden", typeInput);
+        model.addAttribute("battle", battle);
         return "battle/battleBlank";
     }
     @GetMapping("/list2/filterContains")
     public String ListFilterContainsBattle(@RequestParam(name = "defender")String defender,
                                            //@RequestParam(name = "attacker")String attacker,
-                                           Model model) {
+                                           Model model, Battle battle) {
         Iterable<Battle> battleIterable = battleRepository.findByDefenderOrAttackerContains(defender, defender);
         model.addAttribute("battle_list", battleIterable);
         String typeInput = "hidden";
         model.addAttribute("isHidden", typeInput);
+        model.addAttribute("battle", battle);
         return "battle/battleBlank";
     }
-    @GetMapping("list2/add2")
+    @GetMapping("add2")
     public String AddBattleGet(
-            @RequestParam(name = "location") String location,
-            @RequestParam(name = "date")Date date,
-            @RequestParam(name = "defender")String defender,
-            @RequestParam(name = "attacker")String attacker,
-            @RequestParam(name = "casualties")Integer casualties,
-            @RequestParam(name = "winner") String winner)
+            Battle battle, Model model)
+//            @RequestParam(name = "location") String location,
+//            @RequestParam(name = "date")Date date,
+//            @RequestParam(name = "defender")String defender,
+//            @RequestParam(name = "attacker")String attacker,
+//            @RequestParam(name = "casualties")Integer casualties,
+//            @RequestParam(name = "winner") String winner)
     {
-
+        model.addAttribute("battle", battle);
         return ("redirect:/list2/");
 
 
     }
 
     @PostMapping("/add2")
-    public String AddBattlePost(
-            @RequestParam(name = "location") String location,
-            @RequestParam(name = "date")Date date,
-            @RequestParam(name = "defender")String defender,
-            @RequestParam(name = "attacker")String attacker,
-            @RequestParam(name = "casualties")Integer casualties,
-            @RequestParam(name = "winner") String winner)
+    public String AddBattlePost( @Valid Battle battle, BindingResult bindingResult, Model model)
+//            @RequestParam(name = "location") String location,
+//            @RequestParam(name = "date")Date date,
+//            @RequestParam(name = "defender")String defender,
+//            @RequestParam(name = "attacker")String attacker,
+//            @RequestParam(name = "casualties")Integer casualties,
+//            @RequestParam(name = "winner") String winner)
     {
+        if(bindingResult.hasErrors()){
+            String typeInput = "hidden";
+            model.addAttribute("isHidden", typeInput);
+            return "battle/battleBlank";
+        }
 
-        Battle new_battle = new Battle(location,date,defender,attacker,casualties,winner);
-        battleRepository.save(new_battle);
+        battleRepository.save(battle);
         return ("redirect:/list2/");
 
 
@@ -114,46 +123,30 @@ public class BattleController {
         return "redirect:/list2/";
     }
     @PostMapping("/upd2")
-    public  String UpdBattlePost(Model model,
-                                @RequestParam Long id_battle,
-                                 @RequestParam(name = "location") String location,
-                                 @RequestParam(name = "date")Date date,
-                                 @RequestParam(name = "defender")String defender,
-                                 @RequestParam(name = "attacker")String attacker,
-                                 @RequestParam(name = "casualties")Integer casualties,
-                                 @RequestParam(name = "winner") String winner)
+    public  String UpdBattlePost(@ModelAttribute("battle") @Valid Battle battle, BindingResult bindingResult, Model model)
+
     {
-        Battle edited_battle = battleRepository.findById(id_battle).orElseThrow();
-        edited_battle.setLocation(location);
-        edited_battle.setDate(date);
-        edited_battle.setDefender(defender);
-        edited_battle.setCasualties(casualties);
-        edited_battle.setAttacker(attacker);
-        edited_battle.setWinner(winner);
-        battleRepository.save(edited_battle);
+        if (bindingResult.hasErrors()){
+            String typeInput = "visible";
+            model.addAttribute("isHidden", typeInput);
+            return "battle/battleBlank";
+        }
+        battleRepository.save(battle);
 
         return "redirect:/list2/";
     }
 
 
     @PostMapping("/updDet2")
-    public  String UpdDetBattlePost(Model model,
-                                   @RequestParam Long id_battle,
-                                    @RequestParam(name = "location") String location,
-                                    @RequestParam(name = "date")Date date,
-                                    @RequestParam(name = "defender")String defender,
-                                    @RequestParam(name = "casualties")Integer casualties,
-                                    @RequestParam(name = "attacker")String attacker,
-                                    @RequestParam(name = "winner") String winner)
+    public  String UpdDetBattlePost(@ModelAttribute("battle") @Valid Battle battle, BindingResult bindingResult, Model model)
+
     {
-        Battle edited_battle = battleRepository.findById(id_battle).orElseThrow();
-        edited_battle.setLocation(location);
-        edited_battle.setDate(date);
-        edited_battle.setDefender(defender);
-        edited_battle.setCasualties(casualties);
-        edited_battle.setAttacker(attacker);
-        edited_battle.setWinner(winner);
-        battleRepository.save(edited_battle);
+        if (bindingResult.hasErrors()){
+            String typeInput = "visible";
+            model.addAttribute("isHidden", typeInput);
+            return "battle/battleBlank";
+        }
+        battleRepository.save(battle);
 
         return "redirect:/list2/";
     }
