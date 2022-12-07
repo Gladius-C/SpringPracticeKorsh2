@@ -59,6 +59,7 @@
     <th>Защитник</th>
     <th>Потери</th>
     <th>Победитель</th>
+    <th>Известные участники</th>
   </tr>
   <tr>
     <td th:text="${el.location}"></td>
@@ -67,6 +68,11 @@
     <td th:text="${el.defender}"></td>
     <td th:text="${el.casualties}"></td>
     <td th:text="${el.winner}"></td>
+    <td>
+      <div th:each="rom: ${el.roman}">
+        <p th:text="${rom.name}"></p>
+      </div>
+    </td>
     <td>
      <a th:href="'/del2/'+${el.UID}">Удалить запись</a>
     </td>
@@ -82,6 +88,7 @@
   <input th:field="*{location}" class="form-control" type="text" name="location" required placeholder="Введите локацию" maxlength="50">
   <div th:if="${#fields.hasErrors('location')}" th:errors="*{location}" style="color: magenta"></div>
   <input  class="form-control" type="date" name="date" required placeholder="Введите дату" maxlength="50">
+<!--  <div th:if="${#fields.hasErrors('date')}" th:errors="*{date}" style="color: magenta"></div>-->
   <input th:field="*{attacker}" class="form-control" type="text" name="attacker" required placeholder="Введите атакующую сторону" maxlength="50">
   <div th:if="${#fields.hasErrors('attacker')}" th:errors="*{attacker}" style="color: magenta"></div>
   <input th:field="*{defender}" class="form-control" type="number" name="defender" required placeholder="Введите защищающуюся сторону" maxlength="50">
@@ -90,6 +97,9 @@
   <div th:if="${#fields.hasErrors('casualties')}" th:errors="*{casualties}" style="color: magenta"></div>
   <input th:field="*{winner}" class="form-control" type="text" name="winner" required placeholder="Введите победившую сторону" maxlength="50">
   <div th:if="${#fields.hasErrors('winner')}" th:errors="*{winner}" style="color: magenta"></div>
+<!--  <select name="roman_uid">-->
+<!--    <option th:each="el:${roman_list}" th:value="${el.UID}" th:text="${el.name}"></option>-->
+<!--  </select>-->
 
   <button type="submit">Добавить битву</button>
 </form>

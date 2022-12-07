@@ -1,6 +1,9 @@
 package com.example.begin.controllers;
 
+import com.example.begin.controllers.Repository.ArmyRepository;
+import com.example.begin.controllers.Repository.BattleRepository;
 import com.example.begin.controllers.Repository.RomanRepository;
+import com.example.begin.controllers.models.Army;
 import com.example.begin.controllers.models.Battle;
 import com.example.begin.controllers.models.Roman;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.GeneratedValue;
 import javax.validation.Valid;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 //@RequestMapping("/Romans")
@@ -20,28 +25,40 @@ public class RomanController {
     @Autowired
     RomanRepository romanRepository;
 
-    @GetMapping("/list1ini")
-    public String InitRoman(Model model,Roman roman)
+    @Autowired
+    BattleRepository battleRepository;
+    @Autowired
+    ArmyRepository armyRepository;
+
+    public void pageInitialiser(Roman roman, Model model)
     {
         Iterable<Roman> romanIterable = romanRepository.findAll();
         model.addAttribute("roman_list",romanIterable);
+        Iterable<Army> armyIterable = armyRepository.findAll();
+        model.addAttribute("army_list",armyIterable);
+        Iterable<Battle> battleIterable = battleRepository.findAll();
+        model.addAttribute("battle_list",battleIterable);
+        String typeInput = "hidden";
         model.addAttribute("roman", roman);
-        //String typeInput = "hidden";
-        //model.addAttribute("isHidden", typeInput);
+        model.addAttribute("isHidden", typeInput);
+    }
+    @GetMapping("/list1ini")
+    public String InitRoman(Model model, Roman roman, Army army)
+    {
+        pageInitialiser(roman, model);
+        String typeInput = "visible";
+        model.addAttribute("isHidden", typeInput);
         return "roman/roman";
     }
 
     @GetMapping("/list1")
     public String ListRoman(Model model, Roman roman){
-        Iterable<Roman> romanIterable = romanRepository.findAll();
-        model.addAttribute("roman_list",romanIterable);
-        String typeInput = "hidden";
-        model.addAttribute("roman", roman);
-        model.addAttribute("isHidden", typeInput);
+        pageInitialiser(roman, model);
         return "roman/roman";
     }
     @GetMapping("/list1/filter")
     public String ListFilterRoman(@RequestParam(name = "name")String name, Model model, Roman roman) {
+        pageInitialiser(roman, model);
         Iterable<Roman> romanIterable = romanRepository.findByName(name);
         model.addAttribute("roman_list", romanIterable);
         String typeInput = "hidden";
@@ -51,6 +68,7 @@ public class RomanController {
     }
     @GetMapping("/list1/filterContains")
     public String ListFilterContainsRoman(@RequestParam(name = "name")String name,Model model, Roman roman) {
+        pageInitialiser(roman, model);
         Iterable<Roman> romanIterable = romanRepository.findByNameContains(name);
         model.addAttribute("roman_list", romanIterable);
         String typeInput = "hidden";
@@ -63,47 +81,41 @@ public class RomanController {
     public String AddRomanGet(
             Roman roman,
             Model model
-//            ,
-//            @RequestParam(name = "name") String name,
-//            @RequestParam(name = "dateOfBirth")Date date_of_birth,
-//            @RequestParam(name = "majorDeeds")String major_deeds,
-//            @RequestParam(name = "netWorth")Integer net_worth,
-//            @RequestParam(name = "ethnicity")String ethnicity
             )
     {
-
-        model.addAttribute("roman", roman);
-
+        pageInitialiser(roman, model);
         return ("redirect:/list1/");
-
-
     }
 
     @PostMapping("/add1")
-    public String AddRomanPost(@Valid Roman roman, BindingResult bindingResult, Model model)
-
+    public String AddRomanPost( @Valid Roman roman, BindingResult bindingResult, Model model)
     {
+            List<Roman> romanList = romanRepository.findAll();
             if (bindingResult.hasErrors()){
-                String typeInput = "hidden";
-                model.addAttribute("isHidden", typeInput);
+                pageInitialiser(roman, model);
                 return "roman/roman";
             }
-            //Roman new_roman = new Roman(name,date_of_birth,net_worth,major_deeds,ethnicity);
+        for (Roman roman1:romanList
+             ) { if ((roman1.getArmy()==roman.getArmy()) & ((roman1.getArmy() !=null) | (roman.getArmy()!=null))){
+            pageInitialiser(roman, model);
+            return "roman/roman";
+            }
+        }
             romanRepository.save(roman);
             return "redirect:/list1/";
-
-
     }
 
     @GetMapping("/del1/{id}")
     public String DelRomanGet(@PathVariable Long id){
         Roman roman = romanRepository.findById(id).orElseThrow();
+        roman.setArmy(null);
         romanRepository.delete(roman);
         return "redirect:/list1/";
     }
 
     @GetMapping("/details1/{id}")
-    public String DetRomanGet(@PathVariable Long id, Model model){
+    public String DetRomanGet(@PathVariable Long id, Model model,Roman roman){
+        pageInitialiser(roman, model);
         model.addAttribute("roman",romanRepository.findById(id).orElseThrow());
         return "roman/roman-detail";
     }
@@ -120,14 +132,26 @@ public class RomanController {
         return "redirect:/list1/";
     }
     @PostMapping("/upd1")
-    public  String UpdRomanPost(@ModelAttribute("roman") @Valid Roman roman, BindingResult bindingResult
-
-    )
+    public  String UpdRomanPost(@ModelAttribute("roman") @Valid Roman roman, BindingResult bindingResult, Model model,
+    @RequestParam(name = "UID")Long id)
     {
+
+        List<Roman> romanList = romanRepository.findAll();
+        Roman romanThis = romanRepository.findById(id).orElseThrow();
         if (bindingResult.hasErrors()){
+            pageInitialiser(roman, model);
+            String typeInput = "visible";
+            model.addAttribute("isHidden", typeInput);
             return "roman/roman";
         }
-
+        for (Roman roman1:romanList
+        ) { if ((roman1.getArmy()==roman.getArmy()) & ((roman1.getArmy() !=null) | (roman.getArmy()!=null))&(roman1.getArmy()!=romanThis.getArmy())){
+            pageInitialiser(roman, model);
+            String typeInput = "visible";
+            model.addAttribute("isHidden", typeInput);
+            return "roman/roman";
+        }
+        }
         romanRepository.save(roman);
 
         return "redirect:/list1/";
@@ -135,25 +159,27 @@ public class RomanController {
 
 
     @PostMapping("/updDet1")
-    public  String UpdDetRomanPost(@ModelAttribute("roman") @Valid Roman roman, BindingResult bindingResult,
-//                                @RequestParam Long id_roman,
-//                                @RequestParam(name = "name") String name,
-//                                @RequestParam(name = "dateOfBirth")Date date_of_birth,
-//                                @RequestParam(name = "majorDeeds")String major_deeds,
-//                                @RequestParam(name = "netWorth")Integer net_worth,
-//                                @RequestParam(name = "ethnicity")String ethnicity
-                                   Model model
+    public  String UpdDetRomanPost(@ModelAttribute("roman") @Valid Roman roman, BindingResult bindingResult, Model model,
+                     @RequestParam(name = "UID")Long id
     )
     {
+
+        List<Roman> romanList = romanRepository.findAll();
+        Roman romanThis = romanRepository.findById(id).orElseThrow();
         if (bindingResult.hasErrors()){
+            pageInitialiser(roman, model);
+            String typeInput = "visible";
+            model.addAttribute("isHidden", typeInput);
             return "roman/roman-detail";
         }
-//        Roman edited_roman = romanRepository.findById(id_roman).orElseThrow();
-//        edited_roman.setName(name);
-//        edited_roman.setDateOfBirth(date_of_birth);
-//        edited_roman.setMajorDeeds(major_deeds);
-//        edited_roman.setNetWorth(net_worth);
-//        edited_roman.setEthnicity(ethnicity);
+        for (Roman roman1:romanList
+        ) { if ((roman1.getArmy()==roman.getArmy()) & ((roman1.getArmy() !=null) | (roman.getArmy()!=null))&(roman1.getArmy()!=romanThis.getArmy())){
+            pageInitialiser(roman, model);
+            String typeInput = "visible";
+            model.addAttribute("isHidden", typeInput);
+            return "roman/roman-detail";
+        }
+        }
         romanRepository.save(roman);
 
         return "redirect:/list1/";

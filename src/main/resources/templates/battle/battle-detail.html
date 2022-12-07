@@ -47,6 +47,9 @@
   <p th:text="'Атакующий: '+${battle.getAttacker()}"></p>
   <p th:text="'Потери: '+${battle.getCasualties()}"></p>
   <p th:text="'Победитель: '+${battle.getWinner()}"></p>
+  <div th:each="rom: ${battle.getRoman()}">
+    <p th:text="' '+${rom.name}"></p>
+  </div>
 </div>
 <form th:action="${'/updDet2'}" method="post" th:object="${battle}">
   <input class="hidden" type="number" name="id_battle" th:value="${battle.getUID()}">
