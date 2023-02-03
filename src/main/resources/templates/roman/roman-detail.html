@@ -43,24 +43,37 @@
 <body>
 <h1 th:text="${roman.getName()}" ></h1>
 <div>
-  <p th:text="'Дата рождения:'+${roman.getDateOfBirth()}"></p>
-  <p th:text="'Чем известен:'+${roman.getMajorDeeds()}"></p>
-  <p th:text="'Денежное состояние:'+${roman.getNetWorth()}"></p>
-  <p th:text="'Этническая принадлежность:'+${roman.getEthnicity()}"></p>
+  <p th:text="'Дата рождения: '+${roman.getDateOfBirth()}"></p>
+  <p th:text="'Чем известен: '+${roman.getMajorDeeds()}"></p>
+  <p th:text="'Денежное состояние: '+${roman.getNetWorth()}"></p>
+  <p th:text="'Этническая принадлежность: '+${roman.getEthnicity()}"></p>
+  <p th:text="'Командует: '+${roman.getArmy().getName()}"></p>
+  <h2  th:if="${roman.getBattle()}">Участвовал в битвах при:</h2>
+  <table th:each="bat:${roman.getBattle()}">
+
+    <td th:text="${bat.getLocation}"></td>
+  </table>
+
 </div>
 <form th:action="${'/updDet1'}" method="post" th:object="${roman}" >
-  <input class="hidden" type="number" name="id_roman" th:value="${roman.getUID()}">
-  <input th:field="*{name}" class="form-control" type="text" name="name" placeholder="Введите имя" maxlength="50">
+  <input class="hidden" type="number" name="UID" th:value="${roman.getUID()}">
+  <input th:field="*{name}" th:value="${roman.getName()}" class="form-control" type="text" name="name" placeholder="Введите имя" maxlength="50">
   <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: magenta"></div>
-  <input th:field="*{dateOfBirth}" class="form-control" type="date" name="dateOfBirth" placeholder="Введите дату рождения" maxlength="50" required>
-  <div th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}" style="color: magenta"></div>
-  <input th:field="*{majorDeeds}" class="form-control" type="text" name="majorDeeds" placeholder="Введите сведения">
-  <div th:if="${#fields.hasErrors('majorDeeds')}" th:errors="*{majorDeeds}" style="color: magenta"></div>
-  <input th:field="*{netWorth}" class="form-control" type="number" name="netWorth" placeholder="Введите сумму" min="0" max="99999999">
-  <div th:if="${#fields.hasErrors('netWorth')}" th:errors="*{netWorth}" style="color: magenta"></div>
-  <input th:field="*{ethnicity}" class="form-control" type="text" name="ethnicity" placeholder="Введите этнос">
-  <div th:if="${#fields.hasErrors('ethnicity')}" th:errors="*{ethnicity}" style="color: magenta"></div>
+  <input th:field="*{dateOfBirth}" th:value="${roman.getDateOfBirth()}" class="form-control" type="date" name="dateOfBirth" placeholder="Введите дату рождения" maxlength="50" required>
 
+  <input th:field="*{majorDeeds}" th:value="${roman.getMajorDeeds()}" class="form-control" type="text" name="majorDeeds" placeholder="Введите сведения">
+  <div th:if="${#fields.hasErrors('majorDeeds')}"  th:errors="*{majorDeeds}" style="color: magenta"></div>
+  <input th:field="*{netWorth}" th:value="${roman.getNetWorth()}" class="form-control"  type="number" name="netWorth" placeholder="Введите сумму" min="0" max="99999999">
+  <div th:if="${#fields.hasErrors('netWorth')}" th:errors="*{netWorth}" style="color: magenta"></div>
+  <input th:field="*{ethnicity}" th:value="${roman.getEthnicity()}" class="form-control" type="text" name="ethnicity" placeholder="Введите этнос">
+  <div th:if="${#fields.hasErrors('ethnicity')}" th:errors="*{ethnicity}" style="color: magenta"></div>
+  <select th:field="*{army}" name="army">
+    <option th:each="el:${army_list}" th:value="${el.UID}" th:text="${el.name}"></option>
+  </select>
+  <div th:each="bat:${battle_list}">
+    <input th:name="${'battle'}" th:value="${bat.UID}" th:checked="${bat.UID!=null && #lists.contains(bat.roman, bat)}" type="checkbox">
+    <label th:text="${bat.location}"/>
+  </div>
   <button type="submit">Обновить персону</button>
 </form>
 <a href="/list1">Вернуться к списку</a>

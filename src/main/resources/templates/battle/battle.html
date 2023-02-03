@@ -38,8 +38,9 @@
 
 </head>
 <body>
-<h1>Сражения!</h1>
-<table th:each="el:${battle_list}">
+
+<form bgcolor="#faebd7">
+<table th:each="el:${battle_list}" >
   <tr>
     <th>Локация</th>
     <th>Дата</th>
@@ -57,7 +58,8 @@
     <td th:text="${el.winner}"></td>
   </tr>
 </table>
-<form action="/add2" method="post" th:object="${new_battle}">
+</form>
+<form action="/add2" method="post" th:object="${new_battle}" bgcolor="#faebd7">
   <input class="form-control" type="text" name="location" required placeholder="Введите локацию" maxlength="50">
   <input  class="form-control" type="date" name="date" required placeholder="Введите дату" maxlength="50">
   <input  class="form-control" type="text" name="attacker" required placeholder="Введите атакующую сторону" maxlength="50">

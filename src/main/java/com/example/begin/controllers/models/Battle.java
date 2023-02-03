@@ -1,14 +1,13 @@
 package com.example.begin.controllers.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.*;
 import javax.xml.crypto.Data;
+import java.util.Collection;
 import java.util.Date;
 
 @Entity
+@Table(name = "battle")
 public class Battle {
 
     @Id
@@ -19,7 +18,7 @@ public class Battle {
     @Size(min=3, max=30, message = "Строка должна быть не больше 30 символов и не меньше 3")
     private String location;
 
-    @NotBlank(message = "Строка не должна быть пустой")
+    @NotNull(message = "Строка не должна быть пустой")
     private Date date;
 
     @NotBlank(message = "Строка не должна быть пустой")
@@ -36,6 +35,22 @@ public class Battle {
     @NotBlank(message = "Строка не должна быть пустой")
     private String winner;
 
+
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "battle_roman",
+    joinColumns = @JoinColumn(name = "roman_uid"),
+    inverseJoinColumns = @JoinColumn(name = "battle_uid"))
+    private Collection<Roman> roman;
+
+    public Collection<Roman> getRoman() {
+        return roman;
+    }
+
+    public void setRoman(Collection<Roman> roman) {
+        this.roman = roman;
+    }
+
     public Battle(){
 
     }
@@ -47,6 +62,7 @@ public class Battle {
         this.attacker = attacker;
         this.casualties = casualties;
         this.winner = winner;
+        //this.roman = roman;
     }
 
     public Long getUID() {

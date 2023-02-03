@@ -1,24 +1,25 @@
 package com.example.begin.controllers.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.*;
-import java.util.Date;
+import java.sql.Date;
+import java.util.Collection;
+
+import java.util.List;
 
 @Entity
+@Table(name = "roman")
 public class Roman {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long UID;
 
     @NotBlank(message = "Строка не должна быть пустой")
-    @Size(min=3, max=30, message = "Строка должна быть не больше 30 символов и не меньше 3")
+    @Size(max=30, message = "Строка должна быть не больше 30 символов и не меньше 3")
     private String name;
 
-    //@NotEmpty(message = "Строка не должна быть пустой")
     @NotNull(message = "Строка не должна быть пустой")
+
     private Date dateOfBirth;
 
     @PositiveOrZero(message = "Значение не может быть меньше нуля")
@@ -26,24 +27,45 @@ public class Roman {
     @NotNull(message = "Строка не должна быть пустой")
     private Integer netWorth;
 
-    @Size(min=5, max=100)
+    @Size(max=100)
     @NotBlank(message = "Строка не должна быть пустой")
     private String majorDeeds;
 
-    @Size(min=5, max=100)
+    @Size(max=100)
     @NotBlank(message = "Строка не должна быть пустой")
     private String ethnicity;
+
+    //@OneToMany(mappedBy = "roman", fetch = FetchType.EAGER, orphanRemoval = true)
+    //public Collection<Army> army;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "army_uid")
+    private Army army;
+
+    @ManyToMany
+    @JoinTable(name = "battle_roman",
+            joinColumns = @JoinColumn(name = "battle_uid"),
+            inverseJoinColumns = @JoinColumn(name = "roman_uid"))
+    private Collection<Battle> battle;
+
+    public Collection<Battle> getBattle() {
+        return battle;
+    }
+
+    public void setBattle(Collection<Battle> battle) {
+        this.battle = battle;
+    }
 
     public Roman(){
 
     }
 
-    public  Roman(String name, Date dateOfBirth, Integer netWorth, String majorDeeds, String ethnicity){
+    public  Roman(String name, Date dateOfBirth, Integer netWorth, String majorDeeds, String ethnicity,Army army){
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.ethnicity = ethnicity;
         this.netWorth = netWorth;
         this.majorDeeds = majorDeeds;
+        this.army = army;
     }
 
     public Long getUID() {
@@ -92,5 +114,13 @@ public class Roman {
 
     public void setEthnicity(String profession) {
         this.ethnicity = profession;
+    }
+
+    public Army getArmy() {
+        return army;
+    }
+
+    public void setArmy(Army army) {
+        this.army = army;
     }
 }

@@ -2,6 +2,7 @@ package com.example.begin.controllers;
 
 
 import com.example.begin.controllers.Repository.BattleRepository;
+import com.example.begin.controllers.Repository.RomanRepository;
 import com.example.begin.controllers.models.Battle;
 import com.example.begin.controllers.models.Battle;
 import com.example.begin.controllers.models.Roman;
@@ -19,6 +20,8 @@ import java.sql.Date;
 public class BattleController {
     @Autowired
     BattleRepository battleRepository;
+    @Autowired
+    RomanRepository romanRepository;
 
     @GetMapping("/list2ini")
     public String InitBattle(Model model, Battle battle)
@@ -26,6 +29,8 @@ public class BattleController {
         Iterable<Battle> battleIterable = battleRepository.findAll();
         model.addAttribute("battle_list",battleIterable);
         model.addAttribute("battle", battle);
+        Iterable<Roman> romanIterable = romanRepository.findAll();
+        model.addAttribute("roman_list",romanIterable);
         //String typeInput = "hidden";
         //model.addAttribute("isHidden", typeInput);
         return "battle/battleBlank";
@@ -34,6 +39,8 @@ public class BattleController {
     public String ListBattle(Model model,Battle battle){
         Iterable<Battle> battleIterable = battleRepository.findAll();
         model.addAttribute("battle_list",battleIterable);
+        Iterable<Roman> romanIterable = romanRepository.findAll();
+        model.addAttribute("roman_list",romanIterable);
         String typeInput = "hidden";
         model.addAttribute("battle", battle);
         model.addAttribute("isHidden", typeInput);
@@ -46,6 +53,8 @@ public class BattleController {
                                    Model model, Battle battle) {
         Iterable<Battle> battleIterable = battleRepository.findByDefenderOrAttacker(defender, defender);
         model.addAttribute("battle_list", battleIterable);
+        Iterable<Roman> romanIterable = romanRepository.findAll();
+        model.addAttribute("roman_list",romanIterable);
         String typeInput = "hidden";
         model.addAttribute("isHidden", typeInput);
         model.addAttribute("battle", battle);
@@ -57,6 +66,8 @@ public class BattleController {
                                            Model model, Battle battle) {
         Iterable<Battle> battleIterable = battleRepository.findByDefenderOrAttackerContains(defender, defender);
         model.addAttribute("battle_list", battleIterable);
+        Iterable<Roman> romanIterable = romanRepository.findAll();
+        model.addAttribute("roman_list",romanIterable);
         String typeInput = "hidden";
         model.addAttribute("isHidden", typeInput);
         model.addAttribute("battle", battle);
@@ -65,13 +76,9 @@ public class BattleController {
     @GetMapping("add2")
     public String AddBattleGet(
             Battle battle, Model model)
-//            @RequestParam(name = "location") String location,
-//            @RequestParam(name = "date")Date date,
-//            @RequestParam(name = "defender")String defender,
-//            @RequestParam(name = "attacker")String attacker,
-//            @RequestParam(name = "casualties")Integer casualties,
-//            @RequestParam(name = "winner") String winner)
+
     {
+
         model.addAttribute("battle", battle);
         return ("redirect:/list2/");
 
@@ -80,16 +87,16 @@ public class BattleController {
 
     @PostMapping("/add2")
     public String AddBattlePost( @Valid Battle battle, BindingResult bindingResult, Model model)
-//            @RequestParam(name = "location") String location,
-//            @RequestParam(name = "date")Date date,
-//            @RequestParam(name = "defender")String defender,
-//            @RequestParam(name = "attacker")String attacker,
-//            @RequestParam(name = "casualties")Integer casualties,
-//            @RequestParam(name = "winner") String winner)
+
     {
         if(bindingResult.hasErrors()){
             String typeInput = "hidden";
             model.addAttribute("isHidden", typeInput);
+            Iterable<Battle> battleIterable = battleRepository.findAll();
+            model.addAttribute("battle_list",battleIterable);
+            model.addAttribute("battle", battle);
+            Iterable<Roman> romanIterable = romanRepository.findAll();
+            model.addAttribute("roman_list",romanIterable);
             return "battle/battleBlank";
         }
 
@@ -108,6 +115,8 @@ public class BattleController {
     @GetMapping("/details2/{id}")
     public String DetBattleGet(@PathVariable Long id, Model model){
         model.addAttribute("battle",battleRepository.findById(id).orElseThrow());
+        Iterable<Roman> romanIterable = romanRepository.findAll();
+        model.addAttribute("roman_list",romanIterable);
         return "battle/battle-detail";
     }
 
@@ -129,6 +138,11 @@ public class BattleController {
         if (bindingResult.hasErrors()){
             String typeInput = "visible";
             model.addAttribute("isHidden", typeInput);
+            Iterable<Battle> battleIterable = battleRepository.findAll();
+            model.addAttribute("battle_list",battleIterable);
+            model.addAttribute("battle", battle);
+            Iterable<Roman> romanIterable = romanRepository.findAll();
+            model.addAttribute("roman_list",romanIterable);
             return "battle/battleBlank";
         }
         battleRepository.save(battle);
@@ -144,6 +158,8 @@ public class BattleController {
         if (bindingResult.hasErrors()){
             String typeInput = "visible";
             model.addAttribute("isHidden", typeInput);
+            Iterable<Roman> romanIterable = romanRepository.findAll();
+            model.addAttribute("roman_list",romanIterable);
             return "battle/battleBlank";
         }
         battleRepository.save(battle);
