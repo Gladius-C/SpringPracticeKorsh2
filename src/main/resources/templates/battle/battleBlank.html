@@ -41,6 +41,7 @@
 </head>
 <body>
 <h1>Битвы!</h1>
+<p><a th:href="'/home'">Вернуться к выбору категории</a></p>
 <div class="container">
   <form method="get" action="/list2/filter">
     <input class="form-control" name="defender" type="text" maxlength="50">
@@ -51,7 +52,7 @@
     <input class="btn btn-info" type="submit" value="Найти по частичному соответствию одной из сторон">
   </form>
 </div>
-<table  th:each="el:${battle_list}">
+<table  th:each="el:${battle_list}" bgcolor="#faebd7">
   <tr>
     <th>Локация</th>
     <th>Дата</th>

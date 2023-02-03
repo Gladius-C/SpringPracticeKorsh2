@@ -1,5 +1,4 @@
 package com.example.begin.controllers.Repository;
-
 import com.example.begin.controllers.Repository.UserRepository;
 import com.example.begin.controllers.models.Role;
 import com.example.begin.controllers.models.User;
@@ -31,6 +30,12 @@ public class RegistrationController {
     @GetMapping("/registration")
     private String regView(User user) {
         return "regis";
+    }
+
+    @GetMapping("/login")
+    private  String login(){
+
+        return "login";
     }
 
     @PostMapping("/registration")
