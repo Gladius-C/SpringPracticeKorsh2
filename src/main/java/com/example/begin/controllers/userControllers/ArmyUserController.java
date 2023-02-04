@@ -1,4 +1,4 @@
-package com.example.begin.controllers;
+package com.example.begin.controllers.userControllers;
 
 import com.example.begin.controllers.Repository.ArmyRepository;
 import com.example.begin.controllers.Repository.CountryRepository;
@@ -7,15 +7,12 @@ import com.example.begin.controllers.models.Army;
 import com.example.begin.controllers.models.Country;
 import com.example.begin.controllers.models.Roman;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
-@PreAuthorize("hasAnyAuthority('ADMIN', 'HISTORIAN')")
-public class ArmyController {
+public class ArmyUserController {
 
     @Autowired
     ArmyRepository armyRepository;
@@ -35,23 +32,12 @@ public class ArmyController {
         model.addAttribute("country_list",countryIterable);
     }
 
-    @GetMapping("/list3/")
+    @GetMapping("/armyLibrary")
     public String ListArmies(Model model, Army army, Roman roman){
         pageInitialiser(model);
         model.addAttribute("army", army);
         model.addAttribute("roman", roman);
 
-        return ("army/army");
-    }
-    @GetMapping("/add3/")
-    public  String AddArmyGet(Model model, Army army, Roman roman){
-        pageInitialiser(model);
-        return "redirect:/list3/";
-    }
-
-    @PostMapping("add3")
-    public String AddArmyPost(Model model, Army army){
-        armyRepository.save(army);
-        return "redirect:/list3/";
+        return ("userPages/userArmies");
     }
 }
