@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <style>
+        .hidden{display: none}
+        .visible{display: inline}
         body {
-            background: #c2a6c2 url("/dragon.png");
+            background: #bb8fbb url("/dragon.png");
+        }
+        th, td{
+            border: solid black;
         }
     </style>
 </head>
@@ -14,11 +19,19 @@
 АНТИЧНЫЕ ПРИКОЛЫ
 </h1>
 <h2>
-    Для переход к информации,
+    Для перехода к информации,
     выберете интересующий вас пункт из списка
 </h2>
-<p><a th:href="'/list1'">Перейти к просмотру персон</a></p>
-<p><a th:href="'/list3/'">Перейти к просмотру армий</a></p>
-<p><a th:href="'/list2/'">Перейти к просмотру битв</a></p>
+<p><a th:href="'/romanLibrary'">Перейти к просмотру персон</a></p>
+<p><a th:href="'/armyLibrary'">Перейти к просмотру армий</a></p>
+<p><a th:href="'/battleLibrary'">Перейти к просмотру битв</a></p>
+<h3>Дальнейшая информация доступна
+    только для историков и администраторов</h3>
+<p ><a th:class="${isHidden}" th:href="'/list1'">Перейти к редактированию персон</a></p>
+<p ><a th:class="${isHidden}" th:href="'/list3/'">Перейти к редактированию армий</a></p>
+<p ><a th:class="${isHidden}" th:href="'/list2/'">Перейти к редактированию битв</a></p>
+<h3>Данные пользователей
+    доступны только администраторам</h3>
+<p ><a th:class="${isHidden}" th:href="'/adminPage'">Перейти к просмотру персональных данных</a></p>
 </body>
 </html>

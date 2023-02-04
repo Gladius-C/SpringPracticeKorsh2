@@ -1,5 +1,6 @@
 package com.example.begin.controllers;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.io.Console;
 
 @Controller
+@PreAuthorize("hasAnyAuthority('ADMIN')")
 public class MainController {
     @GetMapping("/bobr1")
     public String index(){
